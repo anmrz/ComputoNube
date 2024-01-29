@@ -4,6 +4,7 @@
 #include <iostream>
 #include <omp.h>
 
+// arrays size, #elements for each thread, print size
 #define N 10000
 #define chunk 10
 #define mostrar 10
@@ -12,6 +13,7 @@ void imprimeArreglo(float* d);
 
 int main()
 {
+    srand(time(NULL));
     std::cout << "Sumando Arreglos en Paralelo!\n";
     float a[N], b[N], c[N];
     int i;
@@ -22,7 +24,7 @@ int main()
         b[i] = (i + 3) * 10;
     }
     int pedazos = chunk;
-
+//directive to create a team of threads and iteration of the loop are divided among those threads
 #pragma omp parallel for \
     shared(a, b, c, pedazos) private(i) \
     schedule(static, pedazos)
@@ -30,6 +32,7 @@ int main()
     for (i = 0; i < N; i++)
         c[i] = a[i] + b[i];
 
+    //print a sample of the result
     std::cout << "Cada uno de los arreglos contiene " << N << " elementos y se le asignan " << chunk << "  elementos a cada uno de los hilos." << std::endl;
 
     std::cout << "Imprimiendo los primeros " << mostrar << " valores del arreglo a: " << std::endl;
